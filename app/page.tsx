@@ -1,69 +1,98 @@
-import Image from "next/image";
+import { Search } from "lucide-react";
+import Header from "@/components/Header";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
+    <main className="min-h-screen bg-background text-foreground">
+      <Header />
+
+      {/* Main Content */}
+      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-3xl text-center">
+          <span className="inline-flex rounded-full bg-muted px-3 py-1 text-sm font-medium">
+            AI-Powered News
+          </span>
+
+          <h1 className="mt-6 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+            Stay informed.
+            <br />
+            <span className="text-primary">Understand more.</span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+
+          <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
+            Discover the latest news from trusted sources, summarized and
+            organized with the help of AI.
+          </p>
+
+          {/* Search */}
+          <div className="mx-auto mt-8 flex max-w-2xl items-center rounded-xl border bg-background p-2 shadow-sm">
+            <Search className="ml-3 h-5 w-5 text-muted-foreground" />
+
+            <input
+              type="text"
+              placeholder="Search for news..."
+              className="h-11 flex-1 bg-transparent px-3 text-sm outline-none placeholder:text-muted-foreground"
+            />
+
+            <button
+              type="button"
+              className="rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+              Search
+            </button>
+          </div>
+        </div>
+
+        {/* Latest News */}
+        <div className="mt-20">
+          <div className="flex items-center justify-between border-b pb-4">
+            <div>
+              <h2 className="text-2xl font-bold">Latest News</h2>
+
+              <p className="mt-1 text-sm text-muted-foreground">
+                The latest stories from around the world
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {[1, 2, 3].map((item) => (
+              <article
+                key={item}
+                className="rounded-xl border bg-card p-6 transition-shadow hover:shadow-md"
+              >
+                <div className="h-40 rounded-lg bg-muted" />
+
+                <div className="mt-5">
+                  <p className="text-xs font-medium uppercase tracking-wide text-primary">
+                    Technology
+                  </p>
+
+                  <h3 className="mt-2 text-lg font-semibold">
+                    News article will appear here
+                  </h3>
+
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Real news articles will be fetched from our news APIs in
+                    the next development stage.
+                  </p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="mt-16 border-t">
+        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-8 text-sm text-muted-foreground sm:px-6 lg:px-8">
+          <p className="font-medium text-foreground">NewsHub</p>
+
+          <p>
+            AI-powered news aggregation built with Next.js and TypeScript.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      </footer>
+    </main>
   );
 }
