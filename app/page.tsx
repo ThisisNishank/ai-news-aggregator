@@ -1,5 +1,6 @@
 import { Search } from "lucide-react";
 import Header from "@/components/Header";
+import NewsCard from "@/components/NewsCard";
 
 export default function Home() {
   return (
@@ -55,31 +56,25 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {[1, 2, 3].map((item) => (
-              <article
-                key={item}
-                className="rounded-xl border bg-card p-6 transition-shadow hover:shadow-md"
-              >
-                <div className="h-40 rounded-lg bg-muted" />
+         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+  <NewsCard
+    category="Technology"
+    title="The latest technology news will appear here"
+    description="Stay updated with important developments from the technology world."
+  />
 
-                <div className="mt-5">
-                  <p className="text-xs font-medium uppercase tracking-wide text-primary">
-                    Technology
-                  </p>
+  <NewsCard
+    category="Business"
+    title="Business stories from around the world"
+    description="Follow the latest trends, companies, markets, and business developments."
+  />
 
-                  <h3 className="mt-2 text-lg font-semibold">
-                    News article will appear here
-                  </h3>
-
-                  <p className="mt-2 text-sm text-muted-foreground">
-                    Real news articles will be fetched from our news APIs in
-                    the next development stage.
-                  </p>
-                </div>
-              </article>
-            ))}
-          </div>
+  <NewsCard
+    category="Science"
+    title="Discover the latest science stories"
+    description="Explore new discoveries, research, and developments in science."
+  />
+</div>
         </div>
       </section>
 
