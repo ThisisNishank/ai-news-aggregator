@@ -1,6 +1,46 @@
 import { Search } from "lucide-react";
 import Header from "@/components/Header";
 import NewsCard from "@/components/NewsCard";
+import { NewsArticle } from "@/types/news";
+
+const sampleArticles: NewsArticle[] = [
+  {
+    id: "1",
+    title: "The latest technology news will appear here",
+    description:
+      "Stay updated with important developments from the technology world.",
+    imageUrl: null,
+    source: "NewsHub",
+    author: null,
+    publishedAt: new Date().toISOString(),
+    url: "#",
+    category: "Technology",
+  },
+  {
+    id: "2",
+    title: "Business stories from around the world",
+    description:
+      "Follow the latest trends, companies, markets, and business developments.",
+    imageUrl: null,
+    source: "NewsHub",
+    author: null,
+    publishedAt: new Date().toISOString(),
+    url: "#",
+    category: "Business",
+  },
+  {
+    id: "3",
+    title: "Discover the latest science stories",
+    description:
+      "Explore new discoveries, research, and developments in science.",
+    imageUrl: null,
+    source: "NewsHub",
+    author: null,
+    publishedAt: new Date().toISOString(),
+    url: "#",
+    category: "Science",
+  },
+];
 
 export default function Home() {
   return (
@@ -56,25 +96,11 @@ export default function Home() {
             </div>
           </div>
 
-         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-  <NewsCard
-    category="Technology"
-    title="The latest technology news will appear here"
-    description="Stay updated with important developments from the technology world."
-  />
-
-  <NewsCard
-    category="Business"
-    title="Business stories from around the world"
-    description="Follow the latest trends, companies, markets, and business developments."
-  />
-
-  <NewsCard
-    category="Science"
-    title="Discover the latest science stories"
-    description="Explore new discoveries, research, and developments in science."
-  />
-</div>
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {sampleArticles.map((article) => (
+              <NewsCard key={article.id} article={article} />
+            ))}
+          </div>
         </div>
       </section>
 
