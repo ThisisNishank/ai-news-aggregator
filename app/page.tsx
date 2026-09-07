@@ -1,53 +1,15 @@
 import { Search } from "lucide-react";
 import Header from "@/components/Header";
 import NewsCard from "@/components/NewsCard";
-import { NewsArticle } from "@/types/news";
+import { getLatestNews } from "@/lib/newsdata";
 
-const sampleArticles: NewsArticle[] = [
-  {
-    id: "1",
-    title: "The latest technology news will appear here",
-    description:
-      "Stay updated with important developments from the technology world.",
-    imageUrl: null,
-    source: "NewsHub",
-    author: null,
-    publishedAt: new Date().toISOString(),
-    url: "#",
-    category: "Technology",
-  },
-  {
-    id: "2",
-    title: "Business stories from around the world",
-    description:
-      "Follow the latest trends, companies, markets, and business developments.",
-    imageUrl: null,
-    source: "NewsHub",
-    author: null,
-    publishedAt: new Date().toISOString(),
-    url: "#",
-    category: "Business",
-  },
-  {
-    id: "3",
-    title: "Discover the latest science stories",
-    description:
-      "Explore new discoveries, research, and developments in science.",
-    imageUrl: null,
-    source: "NewsHub",
-    author: null,
-    publishedAt: new Date().toISOString(),
-    url: "#",
-    category: "Science",
-  },
-];
+export default async function Home() {
+  const articles = await getLatestNews();
 
-export default function Home() {
   return (
     <main className="min-h-screen bg-background text-foreground">
       <Header />
 
-      {/* Main Content */}
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
           <span className="inline-flex rounded-full bg-muted px-3 py-1 text-sm font-medium">
@@ -65,7 +27,6 @@ export default function Home() {
             organized with the help of AI.
           </p>
 
-          {/* Search */}
           <div className="mx-auto mt-8 flex max-w-2xl items-center rounded-xl border bg-background p-2 shadow-sm">
             <Search className="ml-3 h-5 w-5 text-muted-foreground" />
 
@@ -84,7 +45,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Latest News */}
         <div className="mt-20">
           <div className="flex items-center justify-between border-b pb-4">
             <div>
@@ -97,14 +57,13 @@ export default function Home() {
           </div>
 
           <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {sampleArticles.map((article) => (
+            {articles.slice(0, 6).map((article) => (
               <NewsCard key={article.id} article={article} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="mt-16 border-t">
         <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-8 text-sm text-muted-foreground sm:px-6 lg:px-8">
           <p className="font-medium text-foreground">NewsHub</p>

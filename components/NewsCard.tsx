@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { NewsArticle } from "@/types/news";
 
 type NewsCardProps = {
@@ -5,16 +8,37 @@ type NewsCardProps = {
 };
 
 export default function NewsCard({ article }: NewsCardProps) {
-  return (
-    <article className="rounded-xl border bg-card p-6 transition-shadow hover:shadow-md">
-      <div className="h-40 rounded-lg bg-muted" />
+  const [imageError, setImageError] = useState(false);
 
-      <div className="mt-5">
+  return (
+    <article className="overflow-hidden rounded-xl border bg-card transition-shadow hover:shadow-md">
+      {article.imageUrl && !imageError ? (
+        <img
+          src={article.imageUrl}
+          alt={article.title}
+          className="h-40 w-full object-cover"
+          loading="lazy"
+          onError={() => setImageError(true)}
+        />
+      ) : (
+        <div className="flex h-40 w-full items-center justify-center bg-muted text-sm text-muted-foreground">
+          No image available
+        </div>
+      )}
+
+      <div className="p-6">
         <p className="text-xs font-medium uppercase tracking-wide text-primary">
           {article.category}
         </p>
 
-        <h3 className="mt-2 text-lg font-semibold">{article.title}</h3>
+        <a
+          href={article.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-2 block text-lg font-semibold hover:underline"
+        >
+          {article.title}
+        </a>
 
         <p className="mt-2 text-sm text-muted-foreground">
           {article.description}
