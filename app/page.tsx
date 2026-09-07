@@ -1,21 +1,31 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
 import Header from "@/components/Header";
 import NewsCard from "@/components/NewsCard";
 import { NewsArticle } from "@/types/news";
 
 export default function Home() {
+  const searchParams = useSearchParams();
+  const category = searchParams.get("category");
+
   const [articles, setArticles] = useState<NewsArticle[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [searchError, setSearchError] = useState("");
 
-  useEffect(() => {
-  async function loadLatestNews() {
+useEffect(() => {
+  async function loadNews() {
+    setSearchError("");
+
     try {
-      const response = await fetch("/api/news/search");
+      const endpoint = category
+        ? `/api/news/search?category=${encodeURIComponent(category)}`
+        : "/api/news/search";
+
+      const response = await fetch(endpoint);
       const data = await response.json();
 
       if (!response.ok) {
@@ -24,12 +34,13 @@ export default function Home() {
 
       setArticles(data.articles);
     } catch {
+      setArticles([]);
       setSearchError("Unable to load news right now. Please try again.");
     }
   }
 
-  loadLatestNews();
-}, []);
+  loadNews();
+}, [category]);
 
   async function handleSearch(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -111,14 +122,20 @@ export default function Home() {
         <div className="mt-20">
           <div className="flex items-center justify-between border-b pb-4">
             <div>
-              <h2 className="text-2xl font-bold">
-                {searchQuery.trim() ? "Search Results" : "Latest News"}
-              </h2>
+            <h2 className="text-2xl font-bold">
+  {searchQuery.trim()
+    ? "Search Results"
+    : category
+      ? `${category.charAt(0).toUpperCase()}${category.slice(1)} News`
+      : "Latest News"}
+</h2>
 
               <p className="mt-1 text-sm text-muted-foreground">
-                {searchQuery.trim()
-                  ? `News results for "${searchQuery.trim()}"`
-                  : "The latest stories from around the world"}
+               {searchQuery.trim()
+                ? `News results for "${searchQuery.trim()}"`
+                : category
+                ? `Latest ${category} news`
+                : "The latest stories from around the world"}
               </p>
             </div>
           </div>

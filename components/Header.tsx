@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   Bookmark,
   Menu,
@@ -21,40 +22,40 @@ export default function Header() {
         </div>
 
         <nav className="hidden items-center gap-6 md:flex">
-          <a
-            href="#"
+          <Link
+            href="/"
             className="text-sm font-medium transition-colors hover:text-primary"
           >
             Home
-          </a>
+          </Link>
 
-          <a
-            href="#"
+          <Link
+            href="/?category=technology"
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
           >
             Technology
-          </a>
+          </Link>
 
-          <a
-            href="#"
+          <Link
+            href="/?category=business"
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
           >
             Business
-          </a>
+          </Link>
 
-          <a
-            href="#"
+          <Link
+            href="/?category=sports"
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
           >
             Sports
-          </a>
+          </Link>
 
-          <a
-            href="#"
+          <Link
+            href="/?category=science"
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
           >
             Science
-          </a>
+          </Link>
         </nav>
 
         <div className="flex items-center gap-2">

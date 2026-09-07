@@ -22,6 +22,7 @@ export async function GET(request: NextRequest) {
   const apiKey = process.env.NEWS_DATA_API_KEY;
   const searchParams = request.nextUrl.searchParams;
   const query = searchParams.get("q")?.trim();
+  const category = searchParams.get("category")?.trim();
 
   if (!apiKey) {
     return NextResponse.json(
@@ -37,6 +38,10 @@ export async function GET(request: NextRequest) {
   url.searchParams.set("apikey", apiKey);
   if (query) {
   url.searchParams.set("q", query);
+}
+
+if (category) {
+  url.searchParams.set("category", category);
 }
   url.searchParams.set("language", "en");
   url.searchParams.set("country", "in");
