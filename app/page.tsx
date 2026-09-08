@@ -143,30 +143,7 @@ export default function Home() {
               what&apos;s happening.
             </p>
 
-            <div className="mt-7 flex flex-wrap items-center gap-2.5 text-sm text-slate-500">
-              <span className="mr-1 font-semibold text-slate-700">
-                Trending:
-              </span>
-
-              {["AI", "Technology", "Business", "Sports", "Science"].map(
-                (topic) => (
-                  <button
-                    key={topic}
-                    type="button"
-                    onClick={() =>
-                      router.push(`/?q=${encodeURIComponent(topic)}`)
-                    }
-                    className={`rounded-full border px-4 py-2 font-medium shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md ${
-                      topic === "AI"
-                        ? "border-blue-500 bg-blue-600 text-white hover:bg-blue-700"
-                        : "border-slate-200 bg-white/80 text-slate-600 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600"
-                    }`}
-                  >
-                    {topic}
-                  </button>
-                ),
-              )}
-            </div>
+            
           </div>
 
           <div className="relative -mr-4 -mt-12 flex min-h-[500px] items-start justify-center sm:-mr-8 lg:-mr-10 lg:-mt-12 lg:min-h-[500px]">
@@ -175,49 +152,100 @@ export default function Home() {
             <div className="relative z-10 w-full">
               <NewsGlobe />
             </div>
-
-            <div className="pointer-events-none absolute right-0 top-10 z-20 hidden rounded-2xl border border-white/70 bg-white/80 px-5 py-4 shadow-xl shadow-blue-900/10 backdrop-blur-xl sm:block lg:right-2">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-500/20">
-                  <span className="text-lg">◎</span>
-                </div>
-
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-wider text-blue-600">
-                    Connected World
-                  </p>
-
-                  <p className="mt-1 text-sm font-medium text-slate-700">
-                    News travels everywhere.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="pointer-events-none absolute bottom-4 left-0 z-20 hidden rounded-2xl border border-white/70 bg-white/85 px-5 py-4 shadow-xl shadow-slate-900/10 backdrop-blur-xl sm:block lg:left-2">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-lg shadow-indigo-500/20">
-                  <span className="text-sm font-bold">N</span>
-                </div>
-
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-wider text-indigo-600">
-                    Global Stories
-                  </p>
-
-                  <p className="mt-1 text-sm font-medium text-slate-700">
-                    One connected world.
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
 
         <div className="pointer-events-none absolute bottom-0 left-0 h-10 w-full bg-gradient-to-t from-white/90 to-transparent" />
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 pb-20 pt-12 sm:px-6 lg:px-8">
+
+<section className="relative overflow-hidden bg-gradient-to-br from-blue-50/70 via-white to-indigo-50/70">
+  <div className="pointer-events-none absolute inset-0">
+    <div className="absolute -left-32 top-10 h-64 w-64 rounded-full bg-blue-400/5 blur-3xl" />
+    <div className="absolute right-0 top-0 h-72 w-72 rounded-full bg-indigo-400/5 blur-3xl" />
+  </div>
+
+  <div className="relative mx-auto max-w-7xl px-4 -translate-y-16 py-14 sm:px-6 lg:px-8">
+    <div className="text-center">
+      <div className="flex items-center justify-center gap-3">
+        <span className="text-3xl font-bold text-blue-600">✦</span>
+
+        <h2 className="text-4xl font-extrabold tracking-tight text-slate-950 sm:text-5xl">
+          Trending{" "}
+          <span className="bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
+            Now
+          </span>
+        </h2>
+      </div>
+
+      <p className="mt-3 text-base text-slate-500 sm:text-lg">
+        Explore what&apos;s capturing the world&apos;s attention right now.
+      </p>
+    </div>
+
+    <div className="mt-10 flex items-center justify-center gap-4">
+      {[
+        {
+          name: "AI",
+          icon: "✦",
+          active: true,
+        },
+        {
+          name: "Technology",
+          icon: "⌘",
+          active: false,
+        },
+        {
+          name: "Business",
+          icon: "▥",
+          active: false,
+        },
+        {
+          name: "Sports",
+          icon: "🏆",
+          active: false,
+        },
+        {
+          name: "Science",
+          icon: "⚗",
+          active: false,
+        },
+      ].map((topic) => (
+        <button
+          key={topic.name}
+          type="button"
+          onClick={() =>
+            router.push(`/?q=${encodeURIComponent(topic.name)}`)
+          }
+          className={`group flex h-20 min-w-[190px] items-center justify-between rounded-2xl border px-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
+            topic.active
+              ? "border-blue-400 bg-blue-600 text-white shadow-lg shadow-blue-500/20 hover:bg-blue-700"
+              : "border-slate-200 bg-white text-slate-800 shadow-sm hover:border-blue-300 hover:shadow-blue-500/10"
+          }`}
+        >
+          <span
+            className={`flex h-11 w-11 items-center justify-center rounded-xl text-xl transition-transform duration-300 group-hover:scale-110 ${
+              topic.active
+                ? "bg-white/15"
+                : "bg-slate-100 text-blue-600 group-hover:bg-blue-50"
+            }`}
+          >
+            {topic.icon}
+          </span>
+
+          <span className="text-base font-bold">{topic.name}</span>
+
+          <span className="text-xl transition-transform duration-300 group-hover:translate-x-1">
+            →
+          </span>
+        </button>
+      ))}
+    </div>
+  </div>
+</section>
+
+
+      <section className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-4 border-b pb-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <div className="mb-2 flex items-center gap-2">
