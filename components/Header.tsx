@@ -9,6 +9,7 @@ import {
   Search,
   User,
 } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
 
 const categories = [
   { name: "Home", href: "/" },
@@ -37,6 +38,8 @@ const categories = [
 export default function Header() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { data: session, isPending } = authClient.useSession();
+
   const activeCategory = searchParams.get("category");
   const currentQuery = searchParams.get("q") ?? "";
 
@@ -54,6 +57,11 @@ export default function Header() {
     router.push(`/?q=${encodeURIComponent(query)}`);
   }
 
+  async function handleSignOut() {
+    await authClient.signOut();
+    router.refresh();
+  }
+
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 backdrop-blur-xl">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -65,7 +73,7 @@ export default function Header() {
 
             <div>
               <span className="block text-xl font-bold tracking-tight text-slate-900">
-                NewsHub
+                KhabarJunction
               </span>
 
               <span className="hidden text-[10px] font-medium tracking-wide text-slate-400 sm:block">
@@ -116,21 +124,51 @@ export default function Header() {
               <Search className="h-5 w-5 transition-transform duration-200 group-hover:scale-110" />
             </button>
 
-            <button
-              type="button"
-              className="hidden rounded-xl p-2.5 text-slate-600 transition-all duration-200 hover:bg-blue-50 hover:text-blue-600 sm:block"
-              aria-label="Saved articles"
-            >
-              <Bookmark className="h-5 w-5 transition-transform duration-200 hover:scale-110" />
-            </button>
+            {!isPending && session ? (
+              <>
+                <button
+                  type="button"
+                  className="hidden rounded-xl p-2.5 text-slate-600 transition-all duration-200 hover:bg-blue-50 hover:text-blue-600 sm:block"
+                  aria-label="Saved articles"
+                >
+                  <Bookmark className="h-5 w-5 transition-transform duration-200 hover:scale-110" />
+                </button>
 
-            <button
-              type="button"
-              className="hidden rounded-xl p-2.5 text-slate-600 transition-all duration-200 hover:bg-blue-50 hover:text-blue-600 sm:block"
-              aria-label="Profile"
-            >
-              <User className="h-5 w-5 transition-transform duration-200 hover:scale-110" />
-            </button>
+                <div className="hidden items-center gap-2 sm:flex">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100 text-blue-700">
+                    <User className="h-4 w-4" />
+                  </div>
+
+                  <span className="max-w-28 truncate text-sm font-semibold text-slate-700">
+                    {session.user.name}
+                  </span>
+
+                  <button
+                    type="button"
+                    onClick={handleSignOut}
+                    className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-500 transition hover:bg-red-50 hover:text-red-600"
+                  >
+                    Logout
+                  </button>
+                </div>
+              </>
+            ) : !isPending ? (
+              <div className="hidden items-center gap-2 sm:flex">
+                <Link
+                  href="/login"
+                  className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-600 transition hover:bg-blue-50 hover:text-blue-600"
+                >
+                  Sign in
+                </Link>
+
+                <Link
+                  href="/register"
+                  className="rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-blue-500/20 transition hover:-translate-y-0.5 hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg"
+                >
+                  Create account
+                </Link>
+              </div>
+            ) : null}
 
             <button
               type="button"
