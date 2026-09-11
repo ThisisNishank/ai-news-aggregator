@@ -8,11 +8,17 @@ import { authClient } from "@/lib/auth-client";
 
 type NewsCardProps = {
   article: NewsArticle;
+  initialSaved?: boolean;
+  onRemove?: (articleId: string) => void;
 };
 
-export default function NewsCard({ article }: NewsCardProps) {
+export default function NewsCard({
+  article,
+  initialSaved = false,
+  onRemove,
+}: NewsCardProps) {
   const [imageError, setImageError] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
+  const [isSaved, setIsSaved] = useState(initialSaved);
   const [isSaving, setIsSaving] = useState(false);
 
   const router = useRouter();
@@ -28,7 +34,7 @@ export default function NewsCard({ article }: NewsCardProps) {
   );
 
   async function handleSave() {
-    if (isPending) {
+    if (isPending || isSaving) {
       return;
     }
 
@@ -53,6 +59,7 @@ export default function NewsCard({ article }: NewsCardProps) {
         }
 
         setIsSaved(false);
+        onRemove?.(article.id);
       } else {
         const response = await fetch("/api/saved-articles", {
           method: "POST",

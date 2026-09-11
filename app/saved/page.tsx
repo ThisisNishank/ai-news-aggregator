@@ -103,9 +103,18 @@ export default function SavedArticlesPage() {
 
         {articles.length > 0 ? (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {articles.map((article) => (
-              <NewsCard key={article.id} article={article} />
-            ))}
+           {articles.map((article) => (
+       <NewsCard
+       key={article.id}
+       article={article}
+       initialSaved
+       onRemove={(articleId) => {
+      setArticles((currentArticles) =>
+        currentArticles.filter((item) => item.id !== articleId),
+      );
+      }}
+    />
+   ))}
           </div>
         ) : (
           <div className="flex min-h-[360px] flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-muted/20 px-6 text-center">
