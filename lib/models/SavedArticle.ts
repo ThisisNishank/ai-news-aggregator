@@ -1,7 +1,7 @@
 import mongoose, { Model, Schema } from "mongoose";
 
 export type SavedArticleDocument = {
-  userId: mongoose.Types.ObjectId;
+  userId: string;
   articleId: string;
   title: string;
   description: string;
@@ -17,9 +17,8 @@ export type SavedArticleDocument = {
 const savedArticleSchema = new Schema<SavedArticleDocument>(
   {
     userId: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
+  type: String,
+  required: true,
     },
     articleId: {
       type: String,

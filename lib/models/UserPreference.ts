@@ -1,7 +1,7 @@
 import mongoose, { Model, Schema } from "mongoose";
 
 export type UserPreferenceDocument = {
-  userId: mongoose.Types.ObjectId;
+  userId: string;
   categories: string[];
   language: string;
   country: string;
@@ -12,10 +12,9 @@ export type UserPreferenceDocument = {
 const userPreferenceSchema = new Schema<UserPreferenceDocument>(
   {
     userId: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-      unique: true,
+  type: String,
+  required: true,
+  unique: true,
     },
     categories: {
       type: [String],

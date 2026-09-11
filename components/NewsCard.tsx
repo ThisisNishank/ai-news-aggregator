@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Bookmark } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { NewsArticle } from "@/types/news";
+import { authClient } from "@/lib/auth-client";
 
 type NewsCardProps = {
   article: NewsArticle;
@@ -10,6 +12,11 @@ type NewsCardProps = {
 
 export default function NewsCard({ article }: NewsCardProps) {
   const [imageError, setImageError] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const router = useRouter();
+  const { data: session, isPending } = authClient.useSession();
 
   const publishedDate = new Date(article.publishedAt).toLocaleDateString(
     "en-IN",
@@ -19,6 +26,58 @@ export default function NewsCard({ article }: NewsCardProps) {
       year: "numeric",
     },
   );
+
+  async function handleSave() {
+    if (isPending) {
+      return;
+    }
+
+    if (!session) {
+      router.push("/login");
+      return;
+    }
+
+    setIsSaving(true);
+
+    try {
+      if (isSaved) {
+        const response = await fetch(
+          `/api/saved-articles?articleId=${encodeURIComponent(article.id)}`,
+          {
+            method: "DELETE",
+          },
+        );
+
+        if (!response.ok) {
+          throw new Error("Unable to remove article");
+        }
+
+        setIsSaved(false);
+      } else {
+        const response = await fetch("/api/saved-articles", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(article),
+        });
+
+        if (!response.ok) {
+          throw new Error("Unable to save article");
+        }
+
+        setIsSaved(true);
+      }
+    } catch {
+      window.alert(
+        isSaved
+          ? "Unable to remove the article."
+          : "Unable to save the article.",
+      );
+    } finally {
+      setIsSaving(false);
+    }
+  }
 
   return (
     <article className="group flex h-[420px] flex-col overflow-hidden rounded-2xl border bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/10">
@@ -45,6 +104,23 @@ export default function NewsCard({ article }: NewsCardProps) {
         <span className="absolute left-4 top-4 rounded-full border border-white/20 bg-black/50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white backdrop-blur-sm">
           {article.category}
         </span>
+
+        <button
+          type="button"
+          onClick={handleSave}
+          disabled={isSaving}
+          aria-label={isSaved ? "Remove saved article" : "Save article"}
+          title={isSaved ? "Remove from saved articles" : "Save article"}
+          className={`absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full border border-white/20 backdrop-blur-sm transition-all duration-200 ${
+            isSaved
+              ? "bg-blue-600 text-white shadow-lg"
+              : "bg-black/50 text-white hover:scale-105 hover:bg-white hover:text-blue-600"
+          } ${isSaving ? "cursor-not-allowed opacity-60" : ""}`}
+        >
+          <Bookmark
+            className={`h-4 w-4 ${isSaved ? "fill-current" : ""}`}
+          />
+        </button>
       </div>
 
       <div className="flex flex-1 flex-col p-5">
