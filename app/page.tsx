@@ -8,6 +8,7 @@ import { Sparkles } from "lucide-react";
 import Header from "@/components/Header";
 import NewsCard from "@/components/NewsCard";
 import { NewsArticle } from "@/types/news";
+import { authClient } from "@/lib/auth-client";
 
 const NewsGlobe = dynamic(() => import("@/components/NewsGlobe"), {
   ssr: false,
@@ -27,6 +28,7 @@ const typingMessages = [
 export default function Home() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { data: session, isPending: isSessionPending } = authClient.useSession();
 
   const category = searchParams.get("category");
   const searchQuery = searchParams.get("q") ?? "";
@@ -34,8 +36,15 @@ export default function Home() {
   const [articles, setArticles] = useState<NewsArticle[]>([]);
   const [searchError, setSearchError] = useState("");
   const [typedText, setTypedText] = useState("");
+  const [isPersonalized, setIsPersonalized] = useState(false);
+  const [preferences, setPreferences] = useState<string[]>([]);
 
   useEffect(() => {
+     if (isSessionPending) {
+    return;
+  }
+    let isCurrent = true;
+
     async function loadNews() {
       setSearchError("");
 
@@ -61,15 +70,31 @@ export default function Home() {
           throw new Error(data.error || "Unable to load news");
         }
 
-        setArticles(data.articles);
+        if (!isCurrent) {
+          return;
+        }
+
+        setArticles(data.articles ?? []);
+        setIsPersonalized(Boolean(data.personalized));
+        setPreferences(data.preferences ?? []);
       } catch {
+        if (!isCurrent) {
+          return;
+        }
+
         setArticles([]);
+        setIsPersonalized(false);
+        setPreferences([]);
         setSearchError("Unable to load news right now. Please try again.");
       }
     }
 
     loadNews();
-  }, [category, searchQuery]);
+
+    return () => {
+      isCurrent = false;
+    };
+  }, [category, searchQuery, session, isSessionPending]);
 
   useEffect(() => {
     let messageIndex = 0;
@@ -107,6 +132,10 @@ export default function Home() {
     return () => clearTimeout(timeoutId);
   }, []);
 
+  const preferredTopics = preferences
+    .map((preference) => preference.charAt(0).toUpperCase() + preference.slice(1))
+    .join(" • ");
+
   return (
     <main className="min-h-screen bg-white text-slate-950">
       <Header />
@@ -142,8 +171,6 @@ export default function Home() {
               topics that matter to you, and gain a clearer perspective on
               what&apos;s happening.
             </p>
-
-            
           </div>
 
           <div className="relative -mr-4 -mt-12 flex min-h-[500px] items-start justify-center sm:-mr-8 lg:-mr-10 lg:-mt-12 lg:min-h-[500px]">
@@ -158,92 +185,91 @@ export default function Home() {
         <div className="pointer-events-none absolute bottom-0 left-0 h-10 w-full bg-gradient-to-t from-white/90 to-transparent" />
       </section>
 
+      <section className="relative overflow-hidden bg-gradient-to-br from-blue-50/70 via-white to-indigo-50/70">
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute -left-32 top-10 h-64 w-64 rounded-full bg-blue-400/5 blur-3xl" />
+          <div className="absolute right-0 top-0 h-72 w-72 rounded-full bg-indigo-400/5 blur-3xl" />
+        </div>
 
-<section className="relative overflow-hidden bg-gradient-to-br from-blue-50/70 via-white to-indigo-50/70">
-  <div className="pointer-events-none absolute inset-0">
-    <div className="absolute -left-32 top-10 h-64 w-64 rounded-full bg-blue-400/5 blur-3xl" />
-    <div className="absolute right-0 top-0 h-72 w-72 rounded-full bg-indigo-400/5 blur-3xl" />
-  </div>
+        <div className="relative mx-auto max-w-7xl px-4 -translate-y-16 py-14 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="flex items-center justify-center gap-3">
+              <span className="text-3xl font-bold text-blue-600">✦</span>
 
-  <div className="relative mx-auto max-w-7xl px-4 -translate-y-16 py-14 sm:px-6 lg:px-8">
-    <div className="text-center">
-      <div className="flex items-center justify-center gap-3">
-        <span className="text-3xl font-bold text-blue-600">✦</span>
+              <h2 className="text-4xl font-extrabold tracking-tight text-slate-950 sm:text-5xl">
+                Trending{" "}
+                <span className="bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
+                  Now
+                </span>
+              </h2>
+            </div>
 
-        <h2 className="text-4xl font-extrabold tracking-tight text-slate-950 sm:text-5xl">
-          Trending{" "}
-          <span className="bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
-            Now
-          </span>
-        </h2>
-      </div>
+            <p className="mt-3 text-base text-slate-500 sm:text-lg">
+              Explore what&apos;s capturing the world&apos;s attention right
+              now.
+            </p>
+          </div>
 
-      <p className="mt-3 text-base text-slate-500 sm:text-lg">
-        Explore what&apos;s capturing the world&apos;s attention right now.
-      </p>
-    </div>
+          <div className="mt-10 flex items-center justify-center gap-4">
+            {[
+              {
+                name: "AI",
+                icon: "✦",
+                active: true,
+              },
+              {
+                name: "Technology",
+                icon: "⌘",
+                active: false,
+              },
+              {
+                name: "Business",
+                icon: "▥",
+                active: false,
+              },
+              {
+                name: "Sports",
+                icon: "🏆",
+                active: false,
+              },
+              {
+                name: "Science",
+                icon: "⚗",
+                active: false,
+              },
+            ].map((topic) => (
+              <button
+                key={topic.name}
+                type="button"
+                onClick={() =>
+                  router.push(`/?q=${encodeURIComponent(topic.name)}`)
+                }
+                className={`group flex h-20 min-w-[190px] items-center justify-between rounded-2xl border px-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
+                  topic.active
+                    ? "border-blue-400 bg-blue-600 text-white shadow-lg shadow-blue-500/20 hover:bg-blue-700"
+                    : "border-slate-200 bg-white text-slate-800 shadow-sm hover:border-blue-300 hover:shadow-blue-500/10"
+                }`}
+              >
+                <span
+                  className={`flex h-11 w-11 items-center justify-center rounded-xl text-xl transition-transform duration-300 group-hover:scale-110 ${
+                    topic.active
+                      ? "bg-white/15"
+                      : "bg-slate-100 text-blue-600 group-hover:bg-blue-50"
+                  }`}
+                >
+                  {topic.icon}
+                </span>
 
-    <div className="mt-10 flex items-center justify-center gap-4">
-      {[
-        {
-          name: "AI",
-          icon: "✦",
-          active: true,
-        },
-        {
-          name: "Technology",
-          icon: "⌘",
-          active: false,
-        },
-        {
-          name: "Business",
-          icon: "▥",
-          active: false,
-        },
-        {
-          name: "Sports",
-          icon: "🏆",
-          active: false,
-        },
-        {
-          name: "Science",
-          icon: "⚗",
-          active: false,
-        },
-      ].map((topic) => (
-        <button
-          key={topic.name}
-          type="button"
-          onClick={() =>
-            router.push(`/?q=${encodeURIComponent(topic.name)}`)
-          }
-          className={`group flex h-20 min-w-[190px] items-center justify-between rounded-2xl border px-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
-            topic.active
-              ? "border-blue-400 bg-blue-600 text-white shadow-lg shadow-blue-500/20 hover:bg-blue-700"
-              : "border-slate-200 bg-white text-slate-800 shadow-sm hover:border-blue-300 hover:shadow-blue-500/10"
-          }`}
-        >
-          <span
-            className={`flex h-11 w-11 items-center justify-center rounded-xl text-xl transition-transform duration-300 group-hover:scale-110 ${
-              topic.active
-                ? "bg-white/15"
-                : "bg-slate-100 text-blue-600 group-hover:bg-blue-50"
-            }`}
-          >
-            {topic.icon}
-          </span>
+                <span className="text-base font-bold">{topic.name}</span>
 
-          <span className="text-base font-bold">{topic.name}</span>
-
-          <span className="text-xl transition-transform duration-300 group-hover:translate-x-1">
-            →
-          </span>
-        </button>
-      ))}
-    </div>
-  </div>
-</section>
-
+                <span className="text-xl transition-transform duration-300 group-hover:translate-x-1">
+                  →
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <section className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-4 border-b pb-5 sm:flex-row sm:items-end sm:justify-between">
@@ -252,7 +278,7 @@ export default function Home() {
               <span className="h-1.5 w-1.5 rounded-full bg-blue-600" />
 
               <span className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-600">
-                News Feed
+                {isPersonalized ? "Personalized Feed" : "News Feed"}
               </span>
             </div>
 
@@ -261,7 +287,9 @@ export default function Home() {
                 ? "Search Results"
                 : category
                   ? `${category.charAt(0).toUpperCase()}${category.slice(1)} News`
-                  : "Latest News"}
+                  : isPersonalized
+                    ? "News For You"
+                    : "Latest News"}
             </h2>
 
             <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500 sm:text-base">
@@ -269,7 +297,11 @@ export default function Home() {
                 ? `Discover the latest stories matching "${searchQuery}".`
                 : category
                   ? `Stay updated with the latest ${category} stories.`
-                  : "Stay up to date with the latest stories from trusted sources."}
+                  : isPersonalized
+                    ? `Stories selected around your interests${
+                        preferredTopics ? `: ${preferredTopics}` : ""
+                      }.`
+                    : "Stay up to date with the latest stories from trusted sources."}
             </p>
           </div>
 
@@ -307,11 +339,11 @@ export default function Home() {
             <div>
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/20">
-                  <span className="text-sm font-bold">N</span>
+                  <span className="text-sm font-bold">K</span>
                 </div>
 
                 <span className="text-xl font-bold tracking-tight">
-                  NewsHub
+                  KhabarJunction
                 </span>
               </div>
 
@@ -367,14 +399,14 @@ export default function Home() {
               </h3>
 
               <p className="mt-4 text-sm leading-6 text-slate-500">
-                NewsHub brings news from multiple sources into one clean,
-                easy-to-use experience.
+                KhabarJunction brings news from multiple sources into one
+                clean, easy-to-use experience.
               </p>
             </div>
           </div>
 
           <div className="mt-10 flex flex-col gap-3 border-t pt-6 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between">
-            <p>© 2026 NewsHub. All rights reserved.</p>
+            <p>© 2026 KhabarJunction. All rights reserved.</p>
             <p>Made for curious minds.</p>
           </div>
         </div>

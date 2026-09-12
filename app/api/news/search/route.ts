@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
+import { connectToDatabase } from "@/lib/mongodb";
+import UserPreference from "@/lib/models/UserPreference";
 import { NewsArticle } from "@/types/news";
 
 type NewsDataArticle = {
@@ -18,11 +21,22 @@ type NewsDataResponse = {
   results: NewsDataArticle[];
 };
 
+function formatArticles(results: NewsDataArticle[]): NewsArticle[] {
+  return results.map((article) => ({
+    id: article.article_id,
+    title: article.title,
+    description: article.description ?? "",
+    imageUrl: article.image_url,
+    source: article.source_name ?? "Unknown Source",
+    author: article.creator?.[0] ?? null,
+    publishedAt: article.pubDate,
+    url: article.link,
+    category: article.category?.[0] ?? "General",
+  }));
+}
+
 export async function GET(request: NextRequest) {
   const apiKey = process.env.NEWS_DATA_API_KEY;
-  const searchParams = request.nextUrl.searchParams;
-  const query = searchParams.get("q")?.trim();
-  const category = searchParams.get("category")?.trim();
 
   if (!apiKey) {
     return NextResponse.json(
@@ -31,22 +45,50 @@ export async function GET(request: NextRequest) {
     );
   }
 
- 
-
-  const url = new URL("https://newsdata.io/api/1/latest");
-
-  url.searchParams.set("apikey", apiKey);
-  if (query) {
-  url.searchParams.set("q", query);
-}
-
-if (category) {
-  url.searchParams.set("category", category);
-}
-  url.searchParams.set("language", "en");
-  url.searchParams.set("country", "in");
+  const searchParams = request.nextUrl.searchParams;
+  const query = searchParams.get("q")?.trim();
+  const category = searchParams.get("category")?.trim();
 
   try {
+    const session = await auth.api.getSession({
+      headers: request.headers,
+    });
+
+    let preferredCategories: string[] = [];
+
+    if (session?.user) {
+      await connectToDatabase();
+
+      const preferences = await UserPreference.findOne({
+        userId: session.user.id,
+      }).lean();
+
+      preferredCategories = preferences?.categories ?? [];
+    }
+
+    const personalizedCategories =
+      !query && !category
+        ? preferredCategories.slice(0, 5)
+        : [];
+
+    const selectedCategories = category
+      ? category
+      : personalizedCategories.join(",");
+
+    const url = new URL("https://newsdata.io/api/1/latest");
+
+    url.searchParams.set("apikey", apiKey);
+    url.searchParams.set("language", "en");
+    url.searchParams.set("country", "in");
+
+    if (query) {
+      url.searchParams.set("q", query);
+    }
+
+    if (selectedCategories) {
+      url.searchParams.set("category", selectedCategories);
+    }
+
     const response = await fetch(url, {
       cache: "no-store",
     });
@@ -67,19 +109,13 @@ if (category) {
       );
     }
 
-    const articles: NewsArticle[] = data.results.map((article) => ({
-      id: article.article_id,
-      title: article.title,
-      description: article.description ?? "",
-      imageUrl: article.image_url,
-      source: article.source_name ?? "Unknown Source",
-      author: article.creator?.[0] ?? null,
-      publishedAt: article.pubDate,
-      url: article.link,
-      category: article.category?.[0] ?? "General",
-    }));
-
-    return NextResponse.json({ articles });
+    return NextResponse.json({
+      articles: formatArticles(data.results),
+      personalized: Boolean(
+        session?.user && personalizedCategories.length,
+      ),
+      preferences: personalizedCategories,
+    });
   } catch {
     return NextResponse.json(
       { error: "Unable to fetch news at the moment" },
