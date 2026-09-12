@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
+import { connectToDatabase } from "@/lib/mongodb";
+import AISummary from "@/lib/models/AISummary";
 import { generateArticleSummary } from "@/lib/gemini";
 
 export async function POST(request: NextRequest) {
@@ -17,6 +19,9 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
 
+    const articleId =
+      typeof body.articleId === "string" ? body.articleId.trim() : "";
+
     const title =
       typeof body.title === "string" ? body.title.trim() : "";
 
@@ -25,26 +30,63 @@ export async function POST(request: NextRequest) {
         ? body.description.trim()
         : "";
 
-    if (!title) {
+    if (!articleId || !title) {
       return NextResponse.json(
-        { error: "Article title is required" },
+        { error: "Article ID and title are required" },
         { status: 400 },
       );
     }
 
-    if (title.length > 500 || description.length > 5000) {
+    if (articleId.length > 300 || title.length > 500 || description.length > 5000) {
       return NextResponse.json(
-        { error: "Article content is too long" },
+        { error: "Article information is too long" },
         { status: 400 },
       );
     }
 
-    const summary = await generateArticleSummary(
+    await connectToDatabase();
+
+    const cachedSummary = await AISummary.findOne({
+      articleId,
+    }).lean();
+
+    if (cachedSummary) {
+      return NextResponse.json({
+        summary: cachedSummary.summary,
+        keyTakeaways: cachedSummary.keyTakeaways,
+        cached: true,
+      });
+    }
+
+    const generatedSummary = await generateArticleSummary(
       title,
       description,
     );
-    
-    return NextResponse.json(summary);
+
+    const savedSummary = await AISummary.findOneAndUpdate(
+      {
+        articleId,
+      },
+      {
+        articleId,
+        title,
+        description,
+        summary: generatedSummary.summary,
+        keyTakeaways: generatedSummary.keyTakeaways,
+      },
+      {
+        new: true,
+        upsert: true,
+        runValidators: true,
+      },
+    ).lean();
+
+    return NextResponse.json({
+      summary: savedSummary?.summary ?? generatedSummary.summary,
+      keyTakeaways:
+        savedSummary?.keyTakeaways ?? generatedSummary.keyTakeaways,
+      cached: false,
+    });
   } catch (error) {
     console.error("AI summary error:", error);
 

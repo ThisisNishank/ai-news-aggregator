@@ -121,9 +121,10 @@ export default function NewsCard({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          title: article.title,
-          description: article.description,
-        }),
+        articleId: article.id,
+        title: article.title,
+        description: article.description,
+       }),
       });
 
       const data = await response.json();
