@@ -6,6 +6,11 @@ import { useRouter } from "next/navigation";
 import { NewsArticle } from "@/types/news";
 import { authClient } from "@/lib/auth-client";
 
+type ArticleSummary = {
+  summary: string;
+  keyTakeaways: string[];
+};
+
 type NewsCardProps = {
   article: NewsArticle;
   initialSaved?: boolean;
@@ -21,7 +26,7 @@ export default function NewsCard({
   const [isSaved, setIsSaved] = useState(initialSaved);
   const [isSaving, setIsSaving] = useState(false);
   const [isSummaryOpen, setIsSummaryOpen] = useState(false);
-  const [summary, setSummary] = useState("");
+  const [summary, setSummary] = useState<ArticleSummary | null>(null);
   const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
   const [summaryError, setSummaryError] = useState("");
 
@@ -127,7 +132,7 @@ export default function NewsCard({
         throw new Error(data.error || "Unable to generate summary");
       }
 
-      setSummary(data.summary ?? "");
+      setSummary(data);
     } catch {
       setSummaryError(
         "Unable to generate the AI summary right now. Please try again.",
@@ -266,11 +271,38 @@ export default function NewsCard({
                   {summaryError}
                 </div>
               ) : (
-                <div className="rounded-xl bg-slate-50 p-5">
-                  <p className="whitespace-pre-line text-sm leading-7 text-slate-700">
-                    {summary}
-                  </p>
-                </div>
+               <div className="space-y-6">
+  <div className="rounded-xl bg-slate-50 p-5">
+    <h4 className="text-sm font-bold uppercase tracking-wide text-slate-900">
+      Summary
+    </h4>
+
+    <p className="mt-3 text-sm leading-7 text-slate-700">
+      {summary?.summary}
+    </p>
+  </div>
+
+  <div>
+    <h4 className="text-sm font-bold uppercase tracking-wide text-slate-900">
+      Key Takeaways
+    </h4>
+
+    <ul className="mt-3 space-y-3">
+      {summary?.keyTakeaways.map((takeaway, index) => (
+        <li
+          key={`${article.id}-takeaway-${index}`}
+          className="flex gap-3 rounded-xl border border-slate-200 bg-white p-3 text-sm leading-6 text-slate-700"
+        >
+          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-700">
+            {index + 1}
+          </span>
+
+          <span>{takeaway}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>
               )}
             </div>
 

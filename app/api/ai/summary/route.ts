@@ -43,8 +43,8 @@ export async function POST(request: NextRequest) {
       title,
       description,
     );
-
-    return NextResponse.json({ summary });
+    
+    return NextResponse.json(summary);
   } catch (error) {
     console.error("AI summary error:", error);
 
