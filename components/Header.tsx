@@ -7,6 +7,7 @@ import {
   Menu,
   Newspaper,
   Search,
+  Settings,
   User,
 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
@@ -126,13 +127,23 @@ export default function Header() {
 
             {!isPending && session ? (
               <>
-                <button
-                  type="button"
-                  className="hidden rounded-xl p-2.5 text-slate-600 transition-all duration-200 hover:bg-blue-50 hover:text-blue-600 sm:block"
+                <Link
+                  href="/saved"
+                  className="group hidden rounded-xl p-2.5 text-slate-600 transition-all duration-200 hover:bg-blue-50 hover:text-blue-600 sm:block"
                   aria-label="Saved articles"
+                  title="Saved articles"
                 >
-                  <Bookmark className="h-5 w-5 transition-transform duration-200 hover:scale-110" />
-                </button>
+                  <Bookmark className="h-5 w-5 transition-transform duration-200 group-hover:scale-110" />
+                </Link>
+
+                <Link
+                  href="/preferences"
+                  className="group hidden rounded-xl p-2.5 text-slate-600 transition-all duration-200 hover:bg-blue-50 hover:text-blue-600 sm:block"
+                  aria-label="Preferences"
+                  title="Preferences"
+                >
+                  <Settings className="h-5 w-5 transition-transform duration-200 group-hover:rotate-45" />
+                </Link>
 
                 <div className="hidden items-center gap-2 sm:flex">
                   <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100 text-blue-700">
