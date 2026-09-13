@@ -36,7 +36,7 @@ The platform integrates external news APIs, user authentication, persistent data
 
 ![AI Article Summary](./screenshots/ai-summary.png)
 
-> Add your actual screenshots to the `screenshots` folder using the filenames referenced above.
+
 
 ## Technology Stack
 
