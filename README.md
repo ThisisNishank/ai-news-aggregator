@@ -128,12 +128,10 @@ Deployment
 KhabarJunction is deployed using Vercel.
 
 
-Author
-
+**Author**
 Nishank Chourey
 
-Computer Science and Engineering Vellore Institute of Technology, Bhopal
 
-GitHub: ThisisNishank 
+**GitHub**:- https://github.com/ThisisNishank
 
-Project Repository: KhabarJunction 
+**Project Repository** :- https://github.com/ThisisNishank/ai-news-aggregator 
