@@ -1,3 +1,4 @@
+
 # KhabarJunction
 
 **KhabarJunction** is a full-stack, AI-powered news aggregation platform that enables users to discover, search, personalize, save, and summarize news articles through a unified web application.
@@ -6,11 +7,11 @@ The platform integrates external news APIs, user authentication, persistent data
 
 ## Live Demo
 
-**[Visit KhabarJunction](https://khabarjunction.vercel.app)**
+[Visit KhabarJunction](https://khabarjunction.vercel.app)
 
 ## GitHub Repository
 
-**[View Source Code](https://github.com/ThisisNishank/ai-news-aggregator)**
+[View Source Code](https://github.com/ThisisNishank/ai-news-aggregator)
 
 ## Features
 
@@ -35,8 +36,6 @@ The platform integrates external news APIs, user authentication, persistent data
 ### AI-Powered Article Summary
 
 ![AI Article Summary](./screenshots/ai-summary.png)
-
-
 
 ## Technology Stack
 
@@ -81,10 +80,11 @@ and Key Takeaways
  |
  v
 Frontend Display
+```
 
+## Project Structure
 
-Project Structure
-
+```text
 ai-news-aggregator/
 ├── app/
 │   ├── api/
@@ -98,46 +98,119 @@ ai-news-aggregator/
 ├── lib/
 ├── models/
 ├── public/
-├── .env.local
+├── screenshots/
+│   ├── homepage.png
+│   └── ai-summary.png
 ├── .gitignore
 ├── next.config.ts
 ├── package.json
 └── tsconfig.json
+```
 
+## Getting Started
 
-**Getting Started**
-Prerequisites
+### Prerequisites
 
 Ensure that the following are installed:
 
-Node.js 20 or later
+- Node.js 20 or later
+- npm
+- Git
+- MongoDB database
+- NewsData.io API key
+- Google Gemini API key
 
-npm
+### Installation
 
-Git
+Clone the repository:
 
-MongoDB database
+```bash
+git clone https://github.com/ThisisNishank/ai-news-aggregator.git
+```
 
-NewsData.io API key
+Navigate to the project directory:
 
-Google Gemini API key
+```bash
+cd ai-news-aggregator
+```
 
+Install the project dependencies:
 
+```bash
+npm install
+```
 
-## **Deployment**
+Create a `.env.local` file in the project root and add the following environment variables:
+
+```env
+NEWS_DATA_API_KEY=your_newsdata_api_key
+MONGODB_URI=your_mongodb_connection_string
+BETTER_AUTH_SECRET=your_better_auth_secret
+BETTER_AUTH_URL=http://localhost:3000
+GEMINI_API_KEY=your_gemini_api_key
+```
+
+### Run the Development Server
+
+```bash
+npm run dev
+```
+
+Open the application in your browser:
+
+[http://localhost:3000](http://localhost:3000)
+
+## Available Scripts
+
+| Command | Description |
+|---|---|
+| `npm run dev` | Starts the Next.js development server |
+| `npm run build` | Creates an optimized production build |
+| `npm run start` | Starts the production server |
+| `npm run lint` | Runs the linting process |
+
+## Deployment
 
 KhabarJunction is deployed using **Vercel**.
 
 **Live Application:** [https://khabarjunction.vercel.app](https://khabarjunction.vercel.app)
 
-## **Author**
+For production deployment, configure the required environment variables in the Vercel project settings.
+
+The production authentication URL should be configured as follows:
+
+```env
+BETTER_AUTH_URL=https://khabarjunction.vercel.app
+```
+
+## Security
+
+- Sensitive credentials are stored in environment variables.
+- `.env.local` is excluded from version control.
+- API keys and database credentials are not hardcoded into the source code.
+- Authentication-protected features require a valid user session.
+
+## Future Enhancements
+
+- Multi-language article summarization
+- Advanced recommendation algorithms
+- Duplicate-article detection
+- Breaking-news notifications
+- Text-to-speech summaries
+- Automated unit and integration testing
+- Progressive Web App support
+
+## Author
 
 **Nishank Chourey**
 
-### **GitHub**
+Computer Science and Engineering  
+Vellore Institute of Technology, Bhopal
+
+### GitHub
 
 [https://github.com/ThisisNishank](https://github.com/ThisisNishank)
 
-### **Project Repository**
+### Project Repository
 
 [https://github.com/ThisisNishank/ai-news-aggregator](https://github.com/ThisisNishank/ai-news-aggregator)
