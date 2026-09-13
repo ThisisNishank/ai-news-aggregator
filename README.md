@@ -137,8 +137,6 @@ For production deployment, configure the required environment variables in the V
 
 **Nishank Chourey**
 
-Computer Science and Engineering  
-Vellore Institute of Technology, Bhopal
 
 ### GitHub
 
