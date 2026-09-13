@@ -47,16 +47,21 @@ export async function POST(request: NextRequest) {
     await connectToDatabase();
 
     const cachedSummary = await AISummary.findOne({
-      articleId,
-    }).lean();
+  articleId,
+}).lean();
 
-    if (cachedSummary) {
-      return NextResponse.json({
-        summary: cachedSummary.summary,
-        keyTakeaways: cachedSummary.keyTakeaways,
-        cached: true,
-      });
-    }
+const isCacheValid =
+  cachedSummary &&
+  cachedSummary.title === title &&
+  cachedSummary.description === description;
+
+if (isCacheValid) {
+  return NextResponse.json({
+    summary: cachedSummary.summary,
+    keyTakeaways: cachedSummary.keyTakeaways,
+    cached: true,
+  });
+}
 
     const generatedSummary = await generateArticleSummary(
       title,

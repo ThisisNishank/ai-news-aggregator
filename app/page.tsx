@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Sparkles } from "lucide-react";
@@ -25,10 +25,12 @@ const typingMessages = [
   "Stay curious. Stay informed.",
 ];
 
-export default function Home() {
+function HomeContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { data: session, isPending: isSessionPending } = authClient.useSession();
+
+  const { data: session, isPending: isSessionPending } =
+    authClient.useSession();
 
   const category = searchParams.get("category");
   const searchQuery = searchParams.get("q") ?? "";
@@ -40,9 +42,10 @@ export default function Home() {
   const [preferences, setPreferences] = useState<string[]>([]);
 
   useEffect(() => {
-     if (isSessionPending) {
-    return;
-  }
+    if (isSessionPending) {
+      return;
+    }
+
     let isCurrent = true;
 
     async function loadNews() {
@@ -133,7 +136,10 @@ export default function Home() {
   }, []);
 
   const preferredTopics = preferences
-    .map((preference) => preference.charAt(0).toUpperCase() + preference.slice(1))
+    .map(
+      (preference) =>
+        preference.charAt(0).toUpperCase() + preference.slice(1),
+    )
     .join(" • ");
 
   return (
@@ -191,7 +197,7 @@ export default function Home() {
           <div className="absolute right-0 top-0 h-72 w-72 rounded-full bg-indigo-400/5 blur-3xl" />
         </div>
 
-        <div className="relative mx-auto max-w-7xl px-4 -translate-y-16 py-14 sm:px-6 lg:px-8">
+        <div className="relative mx-auto max-w-7xl -translate-y-16 px-4 py-14 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-3">
               <span className="text-3xl font-bold text-blue-600">✦</span>
@@ -412,5 +418,21 @@ export default function Home() {
         </div>
       </footer>
     </main>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense
+      fallback={
+        <main className="flex min-h-screen items-center justify-center bg-white text-slate-950">
+          <p className="text-sm text-slate-500">
+            Loading KhabarJunction...
+          </p>
+        </main>
+      }
+    >
+      <HomeContent />
+    </Suspense>
   );
 }

@@ -134,7 +134,7 @@ export default function PreferencesPage() {
             </h2>
 
             <p className="mt-1 text-sm text-muted-foreground">
-              Select one or more topics you're interested in.
+              Select one or more topics you&apos;re interested in.
             </p>
 
             <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
