@@ -105,7 +105,7 @@ ai-news-aggregator/
 └── tsconfig.json
 
 
-Getting Started
+**Getting Started**
 Prerequisites
 
 Ensure that the following are installed:
@@ -123,15 +123,21 @@ NewsData.io API key
 Google Gemini API key
 
 
-Deployment
 
-KhabarJunction is deployed using Vercel.
+## **Deployment**
 
+KhabarJunction is deployed using **Vercel**.
 
-**Author**
-Nishank Chourey
+**Live Application:** [https://khabarjunction.vercel.app](https://khabarjunction.vercel.app)
 
+## **Author**
 
-**GitHub**:- https://github.com/ThisisNishank
+**Nishank Chourey**
 
-**Project Repository** :- https://github.com/ThisisNishank/ai-news-aggregator 
+### **GitHub**
+
+[https://github.com/ThisisNishank](https://github.com/ThisisNishank)
+
+### **Project Repository**
+
+[https://github.com/ThisisNishank/ai-news-aggregator](https://github.com/ThisisNishank/ai-news-aggregator)
