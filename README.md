@@ -1,36 +1,139 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# KhabarJunction
 
-## Getting Started
+**KhabarJunction** is a full-stack, AI-powered news aggregation platform that enables users to discover, search, personalize, save, and summarize news articles through a unified web application.
 
-First, run the development server:
+The platform integrates external news APIs, user authentication, persistent data storage, and generative AI to provide a personalized and efficient news-reading experience.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Live Demo
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**[Visit KhabarJunction](https://khabarjunction.vercel.app)**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## GitHub Repository
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**[View Source Code](https://github.com/ThisisNishank/ai-news-aggregator)**
 
-## Learn More
+## Features
 
-To learn more about Next.js, take a look at the following resources:
+- **News Aggregation:** Retrieves news articles using the NewsData.io API.
+- **News Discovery:** Allows users to explore articles by category and topic.
+- **Search Functionality:** Supports keyword-based news search.
+- **User Authentication:** Provides registration, login, and session management using Better Auth.
+- **Personalized News Feed:** Displays news based on user-selected interests.
+- **Saved Articles:** Allows authenticated users to bookmark and manage articles.
+- **AI-Powered Summarization:** Uses Google Gemini to generate concise article summaries.
+- **Key Takeaways:** Provides three important takeaways for each generated summary.
+- **AI Summary Caching:** Stores generated summaries in MongoDB to reduce repeated AI requests.
+- **Cache Validation:** Validates cached summaries against article metadata to prevent outdated results.
+- **Responsive Interface:** Supports desktop and mobile screen sizes.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Screenshots
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Homepage
 
-## Deploy on Vercel
+![KhabarJunction Homepage](./screenshots/homepage.png)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### AI-Powered Article Summary
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+![AI Article Summary](./screenshots/ai-summary.png)
+
+> Add your actual screenshots to the `screenshots` folder using the filenames referenced above.
+
+## Technology Stack
+
+| Category | Technologies |
+|---|---|
+| Frontend | Next.js, React, TypeScript, Tailwind CSS, Lucide React |
+| Backend | Next.js Route Handlers, Node.js, TypeScript |
+| Database | MongoDB, Mongoose, MongoDB Atlas |
+| Authentication | Better Auth |
+| Artificial Intelligence | Google Gemini API, `@google/genai` |
+| External API | NewsData.io |
+| Deployment | Vercel |
+| Version Control | Git, GitHub |
+
+## Application Workflow
+
+```text
+User
+ |
+ v
+Next.js Frontend
+ |
+ v
+Next.js Route Handlers
+ |
+ +--------------------+
+ |                    |
+ v                    v
+NewsData.io       MongoDB Atlas
+ |                    |
+ v                    |
+News Articles     Users, Preferences,
+                  Saved Articles,
+                  AI Summary Cache
+ |
+ v
+Google Gemini API
+ |
+ v
+Article Summary
+and Key Takeaways
+ |
+ v
+Frontend Display
+
+
+Project Structure
+
+ai-news-aggregator/
+├── app/
+│   ├── api/
+│   ├── login/
+│   ├── register/
+│   ├── saved/
+│   ├── preferences/
+│   ├── layout.tsx
+│   └── page.tsx
+├── components/
+├── lib/
+├── models/
+├── public/
+├── .env.local
+├── .gitignore
+├── next.config.ts
+├── package.json
+└── tsconfig.json
+
+
+Getting Started
+Prerequisites
+
+Ensure that the following are installed:
+
+Node.js 20 or later
+
+npm
+
+Git
+
+MongoDB database
+
+NewsData.io API key
+
+Google Gemini API key
+
+
+Deployment
+
+KhabarJunction is deployed using Vercel.
+
+
+Author
+
+Nishank Chourey
+
+Computer Science and Engineering Vellore Institute of Technology, Bhopal
+
+GitHub: ThisisNishank 
+
+Project Repository: KhabarJunction 
