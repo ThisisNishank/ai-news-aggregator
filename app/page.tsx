@@ -149,10 +149,10 @@ function HomeContent() {
       <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-indigo-50">
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute -left-40 top-10 h-96 w-96 rounded-full bg-blue-400/10 blur-3xl" />
-          <div className="absolute right-0 top-0 h-[520px] w-[520px] rounded-full bg-indigo-500/10 blur-3xl" />
+          <div className="absolute right-0 top-0 h-[10px] w-[420px] rounded-full bg-indigo-500/10 blur-3xl" />
         </div>
 
-        <div className="relative mx-auto grid min-h-[620px] max-w-7xl items-start px-4 pb-16 pt-8 sm:px-6 md:pb-20 md:pt-8 lg:grid-cols-[0.95fr_1.05fr] lg:px-8 lg:py-8">
+        <div className="relative mx-auto grid min-h-[520px] max-w-7xl items-start px-4 pb-16 pt-8 sm:px-6 md:pb-20 md:pt-8 lg:grid-cols-[0.95fr_1.05fr] lg:px-8 lg:py-8">
           <div className="relative z-20 max-w-2xl pt-0 lg:pr-4 lg:pt-2">
             <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white/80 px-4 py-2 text-sm font-semibold text-blue-600 shadow-sm backdrop-blur-md">
               <Sparkles className="h-4 w-4" />
@@ -197,7 +197,7 @@ function HomeContent() {
           <div className="absolute right-0 top-0 h-72 w-72 rounded-full bg-indigo-400/5 blur-3xl" />
         </div>
 
-        <div className="relative mx-auto max-w-7xl -translate-y-16 px-4 py-14 sm:px-6 lg:px-8">
+        <div className="relative mx-auto max-w-7xl -translate-y-15 px-4 py-14 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-3">
               <span className="text-3xl font-bold text-blue-600">✦</span>
@@ -277,7 +277,7 @@ function HomeContent() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6 lg:px-8">
+      <section className="mx-auto max-w-7xl px-4 pb-20 pt-0 sm:px-2 lg:px-4">
         <div className="flex flex-col gap-4 border-b pb-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <div className="mb-2 flex items-center gap-2">
